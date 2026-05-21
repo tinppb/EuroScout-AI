@@ -1,0 +1,19 @@
+{
+  "name": "euroscout-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "EuroScout AI - Interactive Football Player Analytics Dashboard",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "chartjs-plugin-datalabels": "^2.2.0"
+  }
+}
