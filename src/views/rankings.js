@@ -185,7 +185,7 @@ function updateTable(navigateTo) {
       <td><span style="font-weight:600;">${p.name}</span></td>
       <td style="color:var(--text-secondary);">${p.team}</td>
       <td><span class="position-badge ${p.position.toLowerCase()}" style="width:24px;height:24px;font-size:0.6rem;">${p.position}</span></td>
-      <td><span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.6rem;">${p.league}</span></td>
+      <td><span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.6rem;">${p.league}</span> <span class="league-tag" style="font-size:0.6rem;background:var(--bg-tertiary);">${p.season}</span></td>
       ${SORTABLE_STATS.slice(0, 12).map(s => {
         const val = p.stats[s];
         const isHighlight = s === currentSort.key;

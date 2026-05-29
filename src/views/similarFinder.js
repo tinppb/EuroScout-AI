@@ -99,7 +99,7 @@ export function initSimilarFinder(navigateTo) {
         <span class="position-badge ${p.position.toLowerCase()}">${p.position}</span>
         <div style="flex:1;">
           <div class="result-name">${p.name}</div>
-          <div class="result-meta">${p.team} • ${p.league}</div>
+          <div class="result-meta">${p.team} • ${p.league} • ${p.season}</div>
         </div>
       </div>
     `).join('');
@@ -211,6 +211,7 @@ function renderResults(targetPlayer, results, navigateTo) {
             <span class="position-badge ${targetPlayer.position.toLowerCase()}">${targetPlayer.position}</span>
             <span style="color:var(--text-secondary);">${targetPlayer.team}</span>
             <span class="league-tag ${getLeagueClass(targetPlayer.league)}">${targetPlayer.league}</span>
+            <span class="league-tag" style="background:var(--bg-tertiary);">${targetPlayer.season}</span>
           </div>
         </div>
         <div style="display:flex;gap:var(--space-xl);">
@@ -262,6 +263,7 @@ function renderResults(targetPlayer, results, navigateTo) {
                   <span class="position-badge ${r.player.position.toLowerCase()}" style="width:22px;height:22px;font-size:0.6rem;">${r.player.position}</span>
                   <span style="font-size:0.78rem;color:var(--text-secondary);">${r.player.team}</span>
                   <span class="league-tag ${getLeagueClass(r.player.league)}" style="font-size:0.6rem;">${r.player.league}</span>
+                  <span class="league-tag" style="font-size:0.6rem;background:var(--bg-tertiary);">${r.player.season}</span>
                 </div>
               </div>
               <button class="btn btn-sm btn-secondary compare-btn" data-player-id="${r.player.id}" data-target-id="${targetPlayer.id}">Compare</button>

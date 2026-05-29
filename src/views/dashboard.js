@@ -123,6 +123,7 @@ export function renderDashboard() {
                 <div class="result-meta">${p.team}</div>
               </div>
               <span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.65rem;">${p.league.slice(0, 3)}</span>
+              <span class="league-tag" style="font-size:0.65rem;background:var(--bg-tertiary);">${p.season}</span>
               <span style="font-weight:700;color:var(--accent-green);">${p.stats.rating?.toFixed(1)}</span>
             </div>
           `).join('')}
@@ -141,6 +142,7 @@ export function renderDashboard() {
                 <div class="result-meta">${p.team}</div>
               </div>
               <span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.65rem;">${p.league.slice(0, 3)}</span>
+              <span class="league-tag" style="font-size:0.65rem;background:var(--bg-tertiary);">${p.season}</span>
               <span style="font-weight:700;color:var(--accent-green);">${p.stats.goals?.toFixed(2)}</span>
             </div>
           `).join('')}
@@ -159,6 +161,7 @@ export function renderDashboard() {
                 <div class="result-meta">${p.team}</div>
               </div>
               <span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.65rem;">${p.league.slice(0, 3)}</span>
+              <span class="league-tag" style="font-size:0.65rem;background:var(--bg-tertiary);">${p.season}</span>
               <span style="font-weight:700;color:var(--accent-green);">${p.stats.assists?.toFixed(2)}</span>
             </div>
           `).join('')}

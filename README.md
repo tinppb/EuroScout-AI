@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Interactive Football Player Analytics Dashboard</strong><br/>
-  Tìm kiếm cầu thủ tương tự, so sánh chỉ số & khám phá dữ liệu Big 5 giải VĐQG châu Âu mùa 2025–2026.
+  Tìm kiếm cầu thủ tương tự, so sánh chỉ số & khám phá dữ liệu Big 5 giải VĐQG châu Âu qua các mùa giải 2023–2026.
 </p>
 
 <p align="center">
@@ -47,13 +47,14 @@
 | Serie A | Ý |
 | Ligue 1 | Pháp |
 
-Toàn bộ dữ liệu là **per-90 minutes stats** (chỉ số trung bình mỗi 90 phút thi đấu) từ mùa giải **2025–2026**, được thu thập từ **Sofascore**.
+Toàn bộ dữ liệu là **per-90 minutes stats** (chỉ số trung bình mỗi 90 phút thi đấu) từ các mùa giải **23/24, 24/25, 25/26**, được thu thập từ **Sofascore**. Tích hợp bộ lọc mùa giải động cho phép so sánh cầu thủ qua nhiều năm hoặc gộp chung (All Seasons).
 
 ---
 
 ## Tính năng
 
 ### Dashboard
+- Hỗ trợ đa mùa giải (Multi-season support) với thanh chọn Mùa Giải linh hoạt
 - Tổng quan số lượng cầu thủ, giải đấu, đội bóng
 - Phân bố cầu thủ theo giải đấu & vị trí (FW / MF / DF / GK)
 - Bảng xếp hạng nhanh: **Top Rated**, **Top Scorers**, **Top Assists** (per 90)
@@ -200,11 +201,11 @@ CSV files (Sofascore)  →  build-data.mjs  →  src/data/players.json
 
 ### Quy trình
 
-1. **Thu thập dữ liệu**: Crawl per-90 stats từ Sofascore cho 5 giải đấu([Top5-Leagues-Scraper-25-26](https://github.com/tinppb/Top5-Leagues-Scraper-25-26))
-2. **Xử lý CSV**: Script đọc 5 file CSV (mỗi giải 1 file)
+1. **Thu thập dữ liệu**: Crawl per-90 stats từ Sofascore cho 5 giải đấu qua 3 mùa giải ([Top5-Leagues-Scraper-25-26](https://github.com/tinppb/Top5-Leagues-Scraper-25-26))
+2. **Xử lý CSV**: Script tự động quét và đọc toàn bộ file CSV của các giải đấu và mùa giải
 3. **Lọc**: Loại bỏ cầu thủ có < 270 phút thi đấu (≈ 3 trận)
-4. **Chuẩn hóa**: Map 44 cột CSV sang JSON keys, chuẩn hóa vị trí (FW/MF/DF/GK), fix encoding
-5. **Xuất**: Ghi ra `players.json` với metadata + toàn bộ cầu thủ
+4. **Chuẩn hóa**: Trích xuất tự động "League" và "Season" từ tên file, chuẩn hóa vị trí, fix encoding
+5. **Xuất**: Ghi ra `players.json` với metadata đa mùa giải + toàn bộ cầu thủ
 
 ### Chạy lại pipeline (nếu có dữ liệu mới)
 

@@ -54,6 +54,7 @@ function renderPlayerSelector(index) {
           <div style="display:flex;align-items:center;justify-content:center;gap:var(--space-xs);margin-top:var(--space-sm);">
             <span class="position-badge ${player.position.toLowerCase()}" style="width:22px;height:22px;font-size:0.6rem;">${player.position}</span>
             <span class="league-tag ${getLeagueClass(player.league)}" style="font-size:0.6rem;">${player.league}</span>
+            <span class="league-tag" style="font-size:0.6rem;background:var(--bg-tertiary);">${player.season}</span>
           </div>
         </div>
       </div>

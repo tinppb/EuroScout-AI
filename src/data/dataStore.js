@@ -6,15 +6,32 @@ import playersData from '../data/players.json';
 // Global data store
 let _players = [];
 let _metadata = {};
+let _currentSeason = 'All';
 
 export function initData() {
   _metadata = playersData.metadata;
   _players = playersData.players;
-  return { players: _players, metadata: _metadata };
+  if (_metadata.available_seasons && _metadata.available_seasons.length > 0) {
+    _currentSeason = _metadata.available_seasons[0]; // Default to latest
+  }
+  return { players: _players, metadata: _metadata, currentSeason: _currentSeason };
 }
 
-export function getPlayers() { return _players; }
+export function getPlayers() { 
+  if (_currentSeason === 'All') return _players;
+  return _players.filter(p => p.season === _currentSeason);
+}
 export function getMetadata() { return _metadata; }
+
+export function getUniqueSeasons() {
+  return _metadata.available_seasons || ['25/26'];
+}
+
+export function getCurrentSeason() { return _currentSeason; }
+
+export function setSeason(season) {
+  _currentSeason = season;
+}
 
 export function getPlayerById(id) {
   return _players.find(p => p.id === id);
@@ -23,7 +40,11 @@ export function getPlayerById(id) {
 export function searchPlayers(query, limit = 10) {
   if (!query || query.length < 2) return [];
   const q = query.toLowerCase();
-  const results = _players.filter(p =>
+  let basePlayers = _players;
+  if (_currentSeason !== 'All') {
+    basePlayers = basePlayers.filter(p => p.season === _currentSeason);
+  }
+  const results = basePlayers.filter(p =>
     p.name.toLowerCase().includes(q) ||
     p.team.toLowerCase().includes(q)
   );
@@ -42,6 +63,9 @@ export function getUniqueLeagues() {
 
 export function getUniqueTeams(league = null) {
   let filtered = _players;
+  if (_currentSeason !== 'All') {
+    filtered = filtered.filter(p => p.season === _currentSeason);
+  }
   if (league) filtered = filtered.filter(p => p.league === league);
   return [...new Set(filtered.map(p => p.team))].sort();
 }

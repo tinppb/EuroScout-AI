@@ -3,13 +3,7 @@ import path from 'path';
 
 const DATA_DIR = 'D:\\top 5 League EU(25_26)\\data\\processed';
 
-const PER90_FILES = [
-  'Premier_League_PER90_STATS.csv',
-  'La_Liga_PER90_STATS.csv',
-  'Bundesliga_PER90_STATS.csv',
-  'Serie_A_PER90_STATS.csv',
-  'Ligue_1_PER90_STATS.csv'
-];
+const PER90_FILES = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('_PER90_STATS.csv'));
 
 function parseCSV(text) {
   const lines = text.split('\n').filter(l => l.trim().length > 0);
@@ -26,8 +20,13 @@ function parseCSV(text) {
     const row = {};
     for (let j = 0; j < headers.length; j++) {
       const val = values[j];
-      const num = parseFloat(val);
-      row[headers[j]] = isNaN(num) ? val : num;
+      // Preserve strings that contain a slash (like "23/24")
+      if (val.includes('/')) {
+        row[headers[j]] = val;
+      } else {
+        const num = parseFloat(val);
+        row[headers[j]] = isNaN(num) ? val : num;
+      }
     }
     rows.push(row);
   }
@@ -153,7 +152,16 @@ for (const file of PER90_FILES) {
   const text = fs.readFileSync(filePath, 'utf-8');
   const rows = parseCSV(text);
   
-  console.log(`Processing ${file}: ${rows.length} players`);
+  // Extract league and season from filename (e.g., Bundesliga_23_24_PER90_STATS.csv)
+  let leagueStr = file.replace('_PER90_STATS.csv', '').replace(/_/g, ' ');
+  let seasonStr = '25/26'; // Default fallback
+  const match = file.match(/^(.*?)_(\d{2}_\d{2})_PER90_STATS\.csv$/);
+  if (match) {
+    leagueStr = match[1].replace(/_/g, ' ');
+    seasonStr = match[2].replace('_', '/'); // "23_24" -> "23/24"
+  }
+  
+  console.log(`Processing ${file} (Season: ${seasonStr}): ${rows.length} players`);
   
   for (const row of rows) {
     // Skip players with very few minutes (less than 270 = 3 full matches)
@@ -170,7 +178,8 @@ for (const file of PER90_FILES) {
       player_id: row['Player ID'] || 0,
       name: fixEncoding(row['Name'] || 'Unknown'),
       team: fixEncoding(row['Team'] || 'Unknown'),
-      league: row['League'] || file.replace('_PER90_STATS.csv', '').replace(/_/g, ' '),
+      league: row['League'] || leagueStr,
+      season: row['Season'] || seasonStr,
       position: normalizePosition(row['Position']),
       stats: stats
     };
@@ -198,6 +207,15 @@ for (const [pos, count] of Object.entries(posCounts)) {
   console.log(`  ${pos}: ${count}`);
 }
 
+console.log(`\nBreakdown by season:`);
+const seasonCounts = {};
+allPlayers.forEach(p => {
+  seasonCounts[p.season] = (seasonCounts[p.season] || 0) + 1;
+});
+for (const [season, count] of Object.entries(seasonCounts)) {
+  console.log(`  ${season}: ${count}`);
+}
+
 // Output
 const outputDir = path.join('d:\\EuroScout AI', 'src', 'data');
 fs.mkdirSync(outputDir, { recursive: true });
@@ -205,7 +223,8 @@ fs.mkdirSync(outputDir, { recursive: true });
 const output = {
   metadata: {
     source: 'Sofascore via crawl',
-    season: '2025-2026',
+    season: 'Multiple',
+    available_seasons: Object.keys(seasonCounts).sort().reverse(), // e.g. ["25/26", "24/25", "23/24"]
     last_updated: new Date().toISOString(),
     total_players: allPlayers.length,
     leagues: Object.keys(leagueCounts),

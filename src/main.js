@@ -3,7 +3,7 @@
  * SPA Router + Event Delegation + Global Search
  */
 import './styles/index.css';
-import { initData, searchPlayers, getPlayerById, getLeagueClass } from './data/dataStore.js';
+import { initData, searchPlayers, getPlayerById, getLeagueClass, getUniqueSeasons, getCurrentSeason, setSeason } from './data/dataStore.js';
 
 // Views
 import { renderDashboard } from './views/dashboard.js';
@@ -56,8 +56,9 @@ function init() {
     // Build navigation
     buildNavigation();
 
-    // Setup global search
+    // Setup global search and season selector
     setupGlobalSearch();
+    setupSeasonSelector();
 
     // Setup sidebar toggle
     setupSidebar();
@@ -209,7 +210,7 @@ function setupGlobalSearch() {
           <span class="position-badge ${p.position.toLowerCase()}" style="width:24px;height:24px;font-size:0.6rem;">${p.position}</span>
           <div style="flex:1;">
             <div class="result-name">${p.name}</div>
-            <div class="result-meta">${p.team} • ${p.league}</div>
+            <div class="result-meta">${p.team} • ${p.league} • ${p.season}</div>
           </div>
           <span class="league-tag ${getLeagueClass(p.league)}" style="font-size:0.6rem;">${p.league.slice(0, 3)}</span>
         </div>
@@ -243,6 +244,28 @@ function setupGlobalSearch() {
       resultsContainer.classList.remove('active');
       input.blur();
     }
+  });
+}
+
+// ─── Season Selector ───
+function setupSeasonSelector() {
+  const selector = document.getElementById('global-season-selector');
+  if (!selector) return;
+
+  const seasons = getUniqueSeasons();
+  const current = getCurrentSeason();
+
+  let html = `<option value="All" ${current === 'All' ? 'selected' : ''}>All Seasons</option>`;
+  seasons.forEach(season => {
+    html += `<option value="${season}" ${current === season ? 'selected' : ''}>${season}</option>`;
+  });
+  selector.innerHTML = html;
+
+  selector.addEventListener('change', (e) => {
+    setSeason(e.target.value);
+    
+    // Re-render current view
+    navigateTo(currentView, viewParams);
   });
 }
 
